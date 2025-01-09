@@ -37,9 +37,11 @@ Please provide answers to these questions using markdown notation and place them
 3. Please provide a link to the repository you are using for this class.
 
 https://github.com/LambVin/SysProg-Class.git
+
 4. Briefly describe what you want to get out of this class.
 
 During my last Co-Op, I got to experience a bit of both Dockers and Kubernates. I want to get more comfortable with them and be able to use them in securing future job opportunities. 
+
 5. Briefly describe any concerns you might be having with being successful in this class (if any).
 
 I am not as comfortable using both the terminal and C. I am excited to learn and get better at both though. 
