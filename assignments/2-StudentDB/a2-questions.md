@@ -5,7 +5,7 @@ Please answer the following questions and submit in your repo for the second ass
 
 1. In this assignment I asked you provide an implementation for the `get_student(...)` function because I think it improves the overall design of the database application.   After you implemented your solution do you agree that externalizing `get_student(...)` into it's own function is a good design strategy?  Briefly describe why or why not.
 
-    > **Answer**:  _start here_
+    > **Answer**:  Yes I do believe that externalizing get_student(...) into its own function is good design strategy. As other functions like add_student, del,_student, and print_db all use get_student, it lets the code be reused instead of duplicated over and over again. This redundancy allows for easier reading and it is easier to change the way to get students for all uses instead of individually changing each one. 
 
 2. Another interesting aspect of the `get_student(...)` function is how its function prototype requires the caller to provide the storage for the `student_t` structure:
 
@@ -39,7 +39,7 @@ Please answer the following questions and submit in your repo for the second ass
     ```
     Can you think of any reason why the above implementation would be a **very bad idea** using the C programming language?  Specifically, address why the above code introduces a subtle bug that could be hard to identify at runtime? 
 
-    > **ANSWER:** _start here_
+    > **ANSWER:** This is a very bad idea since this returns a pointer to a local variable, which is allocated on the stack. If the function is exited and the stack is deallocated, this will point to invalid or overwritten memory. This could lead to corruption or segment failure since it would be a undefined behavior.
 
 3. Another way the `get_student(...)` function could be implemented is as follows:
 
@@ -72,7 +72,7 @@ Please answer the following questions and submit in your repo for the second ass
     ```
     In this implementation the storage for the student record is allocated on the heap using `malloc()` and passed back to the caller when the function returns. What do you think about this alternative implementation of `get_student(...)`?  Address in your answer why it work work, but also think about any potential problems it could cause.  
     
-    > **ANSWER:** _start here_  
+    > **ANSWER:** malloc() would allow for the data to persists after the function returns. If the caller forgets to free() the memory, it would lead to memory leaks.
 
 
 4. Lets take a look at how storage is managed for our simple database. Recall that all student records are stored on disk using the layout of the `student_t` structure (which has a size of 64 bytes).  Lets start with a fresh database by deleting the `student.db` file using the command `rm ./student.db`.  Now that we have an empty database lets add a few students and see what is happening under the covers.  Consider the following sequence of commands:
@@ -102,12 +102,12 @@ Please answer the following questions and submit in your repo for the second ass
 
     - Please explain why the file size reported by the `ls` command was 128 bytes after adding student with ID=1, 256 after adding student with ID=3, and 4160 after adding the student with ID=64? 
 
-        > **ANSWER:** _start here_
+        > **ANSWER:** Each student record is 64 bytes, and the file size is determined by the highest student ID written. The file size grows to offset + 64, even if there are gaps between records.
 
     -   Why did the total storage used on the disk remain unchanged when we added the student with ID=1, ID=3, and ID=63, but increased from 4K to 8K when we added the student with ID=64? 
 
-        > **ANSWER:** _start here_
-
+        > **ANSWER:** Linux file systems allocate storage in 4KB blocks, so IDs 1, 3, and 63 fit within the first block. Adding ID=64 crossed the 4KB boundary, requiring an additional block and increasing disk usage to 8KB.
+        
     - Now lets add one more student with a large student ID number  and see what happens:
 
         ```bash
@@ -119,4 +119,4 @@ Please answer the following questions and submit in your repo for the second ass
         ```
         We see from above adding a student with a very large student ID (ID=99999) increased the file size to 6400000 as shown by `ls` but the raw storage only increased to 12K as reported by `du`.  Can provide some insight into why this happened?
 
-        > **ANSWER:**  _start here_
+        > **ANSWER:**  lseek() moved the write position to 6.4MB, creating a large logical file with unallocated "holes." Since only a few records were written, actual disk usage remained low, increasing minimally to 12KB.
