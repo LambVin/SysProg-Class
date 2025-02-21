@@ -2,7 +2,7 @@
 
 # File: student_tests.sh
 # 
-# Create your unit tests suit in this file
+# Create your unit tests suite in this file
 
 @test "Example: check ls runs without errors" {
     run ./dsh <<EOF                
@@ -25,7 +25,8 @@ EOF
 dragon
 exit
 EOF
-    echo "$output" | grep "DRAGON: extra credit not implemented"
+    [[ "$output" == *"DRAGON: extra credit not implemented"* ]]
+    [[ "$output" == *"dsh2>"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -35,7 +36,7 @@ EOF
 pwd
 exit
 EOF
-    echo "$output" | grep "$current"
+    [[ "$output" == *"$(pwd)"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -44,7 +45,7 @@ EOF
 uname -a
 exit
 EOF
-    echo "$output" | grep "Linux"
+    [[ "$output" == *"Linux"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -53,7 +54,7 @@ EOF
 echo "test    message with   spaces"
 exit
 EOF
-    echo "$output" | grep "test    message with   spaces"
+    [[ "$output" == *"test    message with   spaces"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -70,7 +71,7 @@ EOF
 
 exit
 EOF
-    echo "$output" | grep "no commands provided"
+    [[ "$output" == *"no commands provided"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -87,7 +88,7 @@ EOF
 echo 'single quoted test'
 exit
 EOF
-    echo "$output" | grep "single quoted test"
+    [[ "$output" == *"single quoted test"* ]]
     [ "$status" -eq 249 ]
 }
 
@@ -96,6 +97,30 @@ EOF
 echo arg1   arg2    arg3
 exit
 EOF
-    echo "$output" | grep "arg1 arg2 arg3"
+    [[ "$output" == *"arg1 arg2 arg3"* ]]
+    [ "$status" -eq 249 ]
+}
+
+@test "CD" {
+    temp_dir="/tmp/dsh-test-dir-$$"
+    mkdir -p "$temp_dir"
+    run ./dsh <<EOF
+cd $temp_dir
+pwd
+exit
+EOF
+    [[ "$output" == *"$temp_dir"* ]]
+    [ "$status" -eq 249 ]
+    rm -rf "$temp_dir"
+}
+
+@test "CD with no arguments" {
+    orig="$(pwd)"
+    run ./dsh <<EOF
+cd
+pwd
+exit
+EOF
+    [[ "$output" == *"$orig"* ]]
     [ "$status" -eq 249 ]
 }
