@@ -199,7 +199,6 @@ Built_In_Cmds exec_built_in_cmd(cmd_buff_t *cmd) {
             return BI_NOT_BI;
     }
 }
-// Add these 2 functions to dshlib.c
 
 int build_cmd_list(char *cmd_line, command_list_t *clist) {
     char *saveptr;
